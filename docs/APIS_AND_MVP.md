@@ -1,100 +1,73 @@
-# APIs + MVP decision sheet
+# Data + APIs — what we are actually using
 
-## Product thesis
-**Not another farm dashboard.** Connect fragmented farm data and turn it into a prioritised daily action plan for small farmers.
+## Core idea
+We are **not** trying to build another analytics dashboard. The MVP should connect a few different farm signals and turn them into a short list of actions:
 
-Core demo sentence:
-> Weather + satellite + sensor data → "these are the 3 things you should care about today, why, and what to do next."
+**weather + sensor + satellite → what should I care about today?**
 
-## MVP integrations
+## MVP data sources
 
-### 1) Open-Meteo — use now
-**Why:** fastest real integration, no API key for basic use, and contains agriculture-relevant forecast variables.
+### Open-Meteo — YES, already connected
+Real weather data, no key needed for the basic API.
 
-Useful variables:
-- precipitation / precipitation probability
-- ET0 FAO reference evapotranspiration
-- vapour pressure deficit (VPD)
-- temperature / humidity / wind
-- some forecast models expose soil moisture too
+We currently use:
+- rain in the next 24h
+- ET0 (useful signal for irrigation demand)
+- VPD (useful signal for plant water stress)
+- peak temperature
 
-Use in MVP:
-- rainfall warning
-- potential water-stress signal
-- timing irrigation tasks
+Why this one: very fast to integrate and enough to make the first recommendation flow real. Open-Meteo can also expose modelled soil moisture, but for the MVP we keep soil moisture as a separate sensor source because the whole point is to show that we can connect external farm devices.
 
-Status: **implemented in `/app/api/weather/route.ts`**.
+### Soil sensor — MOCK FOR MVP
+We simulate a tiny vendor/device payload, e.g.:
 
-### 2) Simulated soil sensor — use now
-Do not waste hackathon time on physical hardware.
-
-Mock a sensor payload such as:
 ```json
 {
   "device_id": "soil-field-2",
   "soil_moisture_pct": 23,
-  "temperature_c": 29.2,
   "timestamp": "2026-10-02T08:00:00Z"
 }
 ```
 
-Later this can be swapped for MQTT/webhook/vendor APIs.
+Later the backend can swap this for MQTT, a webhook or a real vendor API without changing the UI/recommendation logic.
 
-### 3) Copernicus Sentinel-2 / Sentinel Hub — add second
-**Why:** official examples already cover NDVI images and NDVI time-series for a field.
+### Copernicus Sentinel-2 — NEXT REAL INTEGRATION
+This should be the next integration if we have time.
 
-Trade-off: requires a Copernicus account + OAuth client credentials. Do this after weather + action feed works.
+Best version for the demo:
+- one demo parcel/polygon
+- get mean NDVI for recent imagery
+- compare against an earlier period
+- if it drops a lot, recommend inspecting that field
 
-Best MVP output:
-- latest NDVI mean for one demo parcel
-- comparison vs previous period
-- if change < -10%, flag zone for inspection
+The cleanest route is Copernicus Data Space **Sentinel Hub Statistical API**. It can calculate NDVI statistics directly for an area, so we do not need to download/process full satellite images ourselves. It does require OAuth client credentials.
 
-Environment variables to add later:
-```
-COPERNICUS_CLIENT_ID=
-COPERNICUS_CLIENT_SECRET=
-```
+### Backups / future
+- **Microsoft Planetary Computer:** public STAC access to Sentinel-2. Good backup if Copernicus auth wastes too much time.
+- **NASA POWER:** useful later for historical/agroclimate baselines, not needed for the core demo.
+- **farmOS:** useful reference for future interoperability, but we should not rebuild our hackathon project around it.
 
-### 4) Microsoft Planetary Computer — fallback satellite route
-Its STAC API is publicly accessible anonymously and includes Sentinel-2 L2A. Useful if Sentinel Hub auth becomes a time sink. We still need code to calculate/serve the vegetation index, so this is a fallback rather than first choice.
+## Recommendation logic
+For now it should be deterministic and explainable, not "AI decides farming".
 
-### 5) NASA POWER — optional / future
-Global agriculture-oriented historical and near-real-time meteorological/solar data via JSON/CSV APIs. Useful for long-term baselines or climate trends, not necessary for the first demo.
-
-### 6) farmOS — inspiration / future interoperability
-Open-source farm management platform exposing JSON:API and JS/Python libraries. Do **not** rebuild the hackathon around it now, but it is good evidence that an open integration layer is realistic.
-
-## Recommendation engine
-Do not make an LLM decide agronomy.
-
-Use explicit rules first:
-- low sensor soil moisture + little rain forecast → inspect / irrigate recommendation
+Examples:
+- low soil moisture + almost no rain → inspect / irrigation recommendation
 - high ET0 or VPD → water-stress warning
-- NDVI decline → inspect field for stress
+- NDVI drop → inspect the affected field
 
-Then optionally use an LLM only to explain the recommendation in farmer-friendly language.
+An LLM can be added later to explain those recommendations in nicer language, but it should not be the thing making the agronomic decision.
 
-## MVP screens
-1. **Today** — ranked actions, explanation, source badges, mark reviewed/completed.
-2. **Farm overview** — 2–3 parcels and simple health state.
-3. **Data sources** — Weather connected, Soil Sensor connected/mock, Satellite connected/demo.
+## What is already working
+- Next.js starter + repo
+- real Open-Meteo request
+- mock soil sensor value
+- mock NDVI value
+- rules combining those inputs into ranked actions
+- responsive "Today" UI
 
-Anything beyond this is stretch scope.
-
-## Suggested 4-person split tomorrow
-- **Javi:** repo/architecture + integrations + first working vertical slice
-- **Person 2:** backend/recommendation rules + sensor data shape
-- **Person 3:** dashboard/UI/map
-- **Person 4:** research/impact/pitch + support on safest backend tasks
-
-Then rebalance after the first 30–45 min depending on experience.
-
-## First demo story
-1. Open demo farm.
-2. System has real forecast + mock soil sensor + demo NDVI.
-3. "3 things need your attention today."
-4. Open irrigation recommendation → see why it was generated and from which sources.
-5. Mark it reviewed / convert to task.
-
-If this works cleanly, the core product is already demonstrable.
+## Next backend steps
+1. Put the mock sensor behind its own `/api/sensors` endpoint.
+2. Store a simple farm/field structure (farm → fields → devices/data sources).
+3. Add Copernicus auth + one `/api/ndvi` route for a demo parcel.
+4. Return one normalized data shape to the recommendation engine.
+5. Later persist actions/tasks in Supabase if we actually need history/accounts.

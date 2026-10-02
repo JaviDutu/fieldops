@@ -9,13 +9,16 @@ type Weather = {
 };
 
 const mockFarm = {
-  name: "Demo Farm — Efate",
+  name: "Efate Demo Farm",
   crop: "Mixed vegetables",
   soilMoisturePct: 23,
   ndviChangePct: -12,
   lat: -17.7333,
   lon: 168.3273,
 };
+
+const FARM_IMAGE =
+  "https://images.unsplash.com/photo-1777063012816-35f5bcbe4e09?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000";
 
 export default function Home() {
   const [weather, setWeather] = useState<Weather | null>(null);
@@ -39,73 +42,140 @@ export default function Home() {
   }, [weather]);
 
   return (
-    <main>
+    <div className="appShell">
       <header className="topbar">
-        <div>
-          <div className="eyebrow">FIELDOPS / CLIMATE HACK-TION</div>
-          <h1>{mockFarm.name}</h1>
-          <p>{mockFarm.crop} · small-farm demo</p>
+        <div className="brandRow">
+          <div className="brandMark">F</div>
+          <strong>FieldOps</strong>
         </div>
-        <div className="status">● Live weather {weather ? "connected" : "loading"}</div>
+
+        <nav className="navTabs" aria-label="Main navigation">
+          <button className="navTab active">Today</button>
+          <button className="navTab">Fields</button>
+          <button className="navTab">Sources</button>
+        </nav>
+
+        <div className="farmSelector">
+          <span className={`liveDot ${weather ? "online" : ""}`} />
+          <span>{mockFarm.name}</span>
+        </div>
       </header>
 
-      <section className="hero">
-        <div>
-          <div className="eyebrow">TODAY</div>
-          <h2>{recommendations.length} things need your attention</h2>
-          <p>We turn fragmented farm data into a prioritised action list.</p>
-        </div>
-        <button onClick={() => location.reload()}>Refresh data</button>
-      </section>
+      <main className="workspace">
+        <section className="mainColumn">
+          <div className="pageHeading">
+            <div>
+              <p className="kicker">TODAY</p>
+              <h1>{recommendations.length} things to act on</h1>
+              <p className="subtle">One place for the signals that actually need a decision.</p>
+            </div>
+            <button className="secondaryButton" onClick={() => location.reload()}>
+              Refresh
+            </button>
+          </div>
 
-      {error && <div className="error">Weather API unavailable — showing demo fallback values.</div>}
+          {error && (
+            <div className="errorNotice">Weather is temporarily unavailable — demo fallback values are being used.</div>
+          )}
 
-      <section className="metrics">
-        <Metric label="Soil moisture" value={`${mockFarm.soilMoisturePct}%`} note="Mock field sensor" />
-        <Metric label="Rain next 24h" value={`${weather?.next24h.rainMm ?? "…"} mm`} note="Open-Meteo" />
-        <Metric label="ET₀ next 24h" value={`${weather?.next24h.et0Mm ?? "…"} mm`} note="Irrigation signal" />
-        <Metric label="NDVI change" value={`${mockFarm.ndviChangePct}%`} note="Satellite demo" />
-      </section>
+          <div className="actionList">
+            {recommendations.map((item) => (
+              <article key={item.id} className="actionRow">
+                <div className={`priorityDot ${item.priority}`} aria-label={`${item.priority} priority`} />
+                <div className="actionBody">
+                  <div className="actionHeading">
+                    <h2>{item.title}</h2>
+                    <span className="sourceText">{item.source.join(" · ")}</span>
+                  </div>
+                  <p>{item.reason}</p>
+                  <div className="recommendedNext">
+                    <span>Recommended next step</span>
+                    <strong>{item.action}</strong>
+                  </div>
+                </div>
+                <button className="reviewButton">Review</button>
+              </article>
+            ))}
+          </div>
 
-      <section className="grid">
-        <div className="panel actions">
-          <div className="panelTitle">Recommended actions</div>
-          {recommendations.map((item) => (
-            <article key={item.id} className={`action ${item.priority}`}>
-              <div className="actionTop">
-                <span className="pill">{item.priority}</span>
-                <span className="sources">{item.source.join(" + ")}</span>
+          <section className="conditions" aria-label="Current conditions">
+            <Condition label="Soil moisture" value={`${mockFarm.soilMoisturePct}%`} meta="sensor demo" />
+            <Condition label="Rain · 24h" value={`${weather?.next24h.rainMm ?? "—"} mm`} meta="Open-Meteo" />
+            <Condition label="ET₀ · 24h" value={`${weather?.next24h.et0Mm ?? "—"} mm`} meta="Open-Meteo" />
+            <Condition label="NDVI change" value={`${mockFarm.ndviChangePct}%`} meta="satellite demo" />
+          </section>
+        </section>
+
+        <aside className="sideColumn">
+          <section className="farmCard">
+            <div className="farmPhoto" style={{ backgroundImage: `url(${FARM_IMAGE})` }}>
+              <div className="photoOverlay">
+                <p>Efate, Vanuatu</p>
+                <strong>{mockFarm.crop}</strong>
               </div>
-              <h3>{item.title}</h3>
-              <p>{item.reason}</p>
-              <div className="next"><strong>Next:</strong> {item.action}</div>
-              <button>Mark as reviewed</button>
-            </article>
-          ))}
-        </div>
+            </div>
 
-        <aside className="panel">
-          <div className="panelTitle">Field overview</div>
-          <div className="fieldMap" aria-label="Demo farm map">
-            <div className="parcel p1">Field 1<br/><small>Normal</small></div>
-            <div className="parcel p2">Field 2<br/><small>Dry</small></div>
-            <div className="parcel p3">Field 3<br/><small>Stress</small></div>
-          </div>
-          <div className="legend">
-            <span>Weather ✓</span><span>Sensor ✓</span><span>Satellite demo</span>
-          </div>
+            <div className="farmCardBody">
+              <div className="sectionHeading">
+                <div>
+                  <p className="kicker">FARM OVERVIEW</p>
+                  <h2>Field status</h2>
+                </div>
+                <span className="smallStatus">3 fields</span>
+              </div>
+
+              <div className="fieldRows">
+                <FieldStatus name="Field 01" detail="North block" state="Healthy" tone="healthy" />
+                <FieldStatus name="Field 02" detail="East block" state="Dry" tone="warning" />
+                <FieldStatus name="Field 03" detail="South block" state="Inspect" tone="danger" />
+              </div>
+
+              <div className="sourceSummary">
+                <div><span>Weather</span><strong>Connected</strong></div>
+                <div><span>Soil sensor</span><strong>Demo feed</strong></div>
+                <div><span>Satellite</span><strong>Demo NDVI</strong></div>
+              </div>
+            </div>
+          </section>
+
+          <p className="photoCredit">Farm photo: Bernd Dittrich / Unsplash</p>
         </aside>
-      </section>
-    </main>
+      </main>
+    </div>
   );
 }
 
-function Metric({ label, value, note }: { label: string; value: string; note: string }) {
+function Condition({ label, value, meta }: { label: string; value: string; meta: string }) {
   return (
-    <div className="metric">
+    <div className="conditionItem">
       <span>{label}</span>
       <strong>{value}</strong>
-      <small>{note}</small>
+      <small>{meta}</small>
+    </div>
+  );
+}
+
+function FieldStatus({
+  name,
+  detail,
+  state,
+  tone,
+}: {
+  name: string;
+  detail: string;
+  state: string;
+  tone: "healthy" | "warning" | "danger";
+}) {
+  return (
+    <div className="fieldRow">
+      <div>
+        <strong>{name}</strong>
+        <span>{detail}</span>
+      </div>
+      <div className={`fieldState ${tone}`}>
+        <span />
+        {state}
+      </div>
     </div>
   );
 }
