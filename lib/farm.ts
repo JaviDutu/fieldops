@@ -1,13 +1,4 @@
 import { LonLat, DataSource, Farm, Field } from "@/types/farm";
-import { prisma } from "@/lib/prisma";
-
-// Each account has its own farm. Most users only ever need one, so we
-// find-or-create it on demand instead of modelling farm creation as a separate step.
-export async function getOrCreateFarmForUser(userId: string, farmName = "My Farm") {
-  const existing = await prisma.farm.findFirst({ where: { userId } });
-  if (existing) return existing;
-  return prisma.farm.create({ data: { userId, name: farmName } });
-}
 
 // Builds a small square parcel around a point (about 11 ha) so every field has a polygon.
 function parcel(lat: number, lon: number, d = 0.0015): LonLat[] {

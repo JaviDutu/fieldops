@@ -9,7 +9,9 @@ Instead of making farmers inspect separate weather, sensor and satellite dashboa
 npm install
 npm run dev
 ```
-Then open `http://localhost:3000` for the landing page, or `http://localhost:3000/field` for the dashboard.
+Then open `http://localhost:3000` for the landing page, or `http://localhost:3000/dashboard` for the dashboard.
+
+No database or login is needed. Fields are saved to `data/fields.json` (created automatically with demo fields on first run, git-ignored). Run `npm run data:reset` to go back to the demo fields.
 
 ## Design & shadcn
 

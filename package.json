@@ -6,11 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "db:seed": "node prisma/seed.mjs"
+    "data:reset": "node -e \"require('fs').rmSync('data/fields.json',{force:true})\""
   },
   "dependencies": {
     "@base-ui/react": "^1.8.0",
-    "@prisma/client": "^6.19.3",
     "@tailwindcss/postcss": "^4.3.3",
     "axios": "^1.20.0",
     "class-variance-authority": "^0.7.1",
@@ -19,7 +18,6 @@
     "cn": "^0.4.0",
     "lucide-react": "^1.51.0",
     "next": "latest",
-    "prisma": "^6.19.3",
     "react": "latest",
     "react-dom": "latest",
     "shadcn": "^4.21.1",

@@ -10,7 +10,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { getCurrentUser } from "@/lib/auth";
 
 const features = [
   {
@@ -30,9 +29,7 @@ const features = [
   },
 ];
 
-export default async function Home() {
-  const user = await getCurrentUser();
-
+export default function Home() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">
       <div
@@ -49,31 +46,13 @@ export default async function Home() {
           <span className="text-lg font-semibold tracking-tight text-foreground">GAIA</span>
         </Link>
         <nav className="flex items-center gap-2 sm:gap-3">
-          {user ? (
-            <Link
-              href="/dashboard"
-              className={cn(buttonVariants({ size: "sm" }), "bg-[#245b3b] hover:bg-[#1e4d32]")}
-            >
-              Go to dashboard
-              <ArrowRight className="size-4" />
-            </Link>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "hidden sm:inline-flex")}
-              >
-                Log in
-              </Link>
-              <Link
-                href="/signup"
-                className={cn(buttonVariants({ size: "sm" }), "bg-[#245b3b] hover:bg-[#1e4d32]")}
-              >
-                Sign up
-                <ArrowRight className="size-4" />
-              </Link>
-            </>
-          )}
+          <Link
+            href="/dashboard"
+            className={cn(buttonVariants({ size: "sm" }), "bg-[#245b3b] hover:bg-[#1e4d32]")}
+          >
+            Go to dashboard
+            <ArrowRight className="size-4" />
+          </Link>
         </nav>
       </header>
 
@@ -99,13 +78,13 @@ export default async function Home() {
 
           <div className="mt-10 flex animate-in fade-in slide-in-from-bottom-4 fill-mode-both flex-col items-center justify-center gap-3 duration-700 [animation-delay:240ms] sm:flex-row">
             <Link
-              href={user ? "/dashboard" : "/signup"}
+              href="/dashboard"
               className={cn(
                 buttonVariants({ size: "lg" }),
                 "h-11 rounded-xl bg-[#245b3b] px-6 hover:bg-[#1e4d32]"
               )}
             >
-              {user ? "Go to field dashboard" : "Get started free"}
+              Go to field dashboard
               <ArrowRight className="size-4" />
             </Link>
             <a
@@ -207,13 +186,13 @@ export default async function Home() {
               </p>
             </div>
             <Link
-              href={user ? "/dashboard" : "/signup"}
+              href="/dashboard"
               className={cn(
                 buttonVariants({ size: "lg" }),
                 "h-11 shrink-0 rounded-xl bg-white text-[#245b3b] hover:bg-emerald-50"
               )}
             >
-              {user ? "Launch dashboard" : "Create your account"}
+              Launch dashboard
               <ArrowRight className="size-4" />
             </Link>
           </div>
