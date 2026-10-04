@@ -148,7 +148,7 @@ export default function FieldPage() {
         });
 
       api
-        .get<NdviSignal>("/ndvi", { params: { fieldId: f.id } })
+        .get<NdviSignal>("/ndvi", { params: { fieldId: f.id, lat: f.lat, lon: f.lon } })
         .then(({ data }) => setNdviByField((prev) => ({ ...prev, [f.id]: data })))
         .catch(() => {
           // Keep field defaults when the satellite demo adapter is unavailable.
@@ -315,7 +315,11 @@ export default function FieldPage() {
               <Condition
                 label="NDVI change"
                 value={`${field.ndviChangePct}%`}
-                meta={ndviByField[field.id] ? "Sentinel-2 adapter · demo data" : "Demo fallback"}
+                meta={
+                  ndviByField[field.id]?.status === "live"
+                    ? "Copernicus Sentinel-2 · live"
+                    : "Sentinel-2 adapter · demo"
+                }
               />
             </section>
           </section>
@@ -374,7 +378,11 @@ export default function FieldPage() {
                   </div>
                   <div>
                     <span>Satellite NDVI</span>
-                    <strong>Sentinel-2 adapter · demo</strong>
+                    <strong>
+                      {ndviByField[field.id]?.status === "live"
+                        ? "Copernicus · live"
+                        : "Sentinel-2 adapter · demo"}
+                    </strong>
                   </div>
                 </div>
               </div>
