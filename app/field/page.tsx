@@ -16,6 +16,13 @@ type Weather = {
   provider: string;
 };
 
+type NdviSignal = {
+  ndvi_mean: number;
+  ndvi_change_pct: number;
+  provider: string;
+  status: string;
+};
+
 type Tone = "healthy" | "warning" | "danger";
 
 const FARM_IMAGE =
@@ -37,6 +44,8 @@ export default function FieldPage() {
   const [weatherError, setWeatherError] = useState<string | null>(null);
   const [farmError, setFarmError] = useState<string | null>(null);
   const [sensorMoisture, setSensorMoisture] = useState<Record<string, number>>({});
+  const [ndviByField, setNdviByField] = useState<Record<string, NdviSignal>>({});
+  const [completedIds, setCompletedIds] = useState<string[]>([]);
   const [reviewRec, setReviewRec] = useState<Recommendation | null>(null);
 
   useEffect(() => {
@@ -48,6 +57,9 @@ export default function FieldPage() {
 
   useEffect(() => {
     try {
+      const completedRaw = localStorage.getItem("completedRecommendationIds");
+      if (completedRaw) setCompletedIds(JSON.parse(completedRaw) as string[]);
+
       const raw = localStorage.getItem("customFields");
       if (raw) {
         const saved = JSON.parse(raw) as Field[];
@@ -66,22 +78,29 @@ export default function FieldPage() {
     }
   }, [customFields, storageReady]);
 
+  useEffect(() => {
+    if (storageReady) {
+      localStorage.setItem("completedRecommendationIds", JSON.stringify(completedIds));
+    }
+  }, [completedIds, storageReady]);
+
   const allFields = useMemo(
     () => [...(farm?.fields ?? []), ...customFields],
     [farm, customFields]
   );
 
-  const fieldsWithSensor = useMemo(
+  const fieldsWithSignals = useMemo(
     () =>
       allFields.map((f) => ({
         ...f,
         soilMoisturePct: sensorMoisture[f.id] ?? f.soilMoisturePct,
+        ndviChangePct: ndviByField[f.id]?.ndvi_change_pct ?? f.ndviChangePct,
       })),
-    [allFields, sensorMoisture]
+    [allFields, sensorMoisture, ndviByField]
   );
 
   const field =
-    fieldsWithSensor.find((f) => f.id === fieldId) ?? fieldsWithSensor[0] ?? null;
+    fieldsWithSignals.find((f) => f.id === fieldId) ?? fieldsWithSignals[0] ?? null;
 
   function handleAdd(lat: number, lon: number, label: string) {
     const newField = makeField(label, lat, lon);
@@ -116,23 +135,33 @@ export default function FieldPage() {
   }, [allFields]);
 
   useEffect(() => {
-    if (!field) return;
-    api
-      .get<{ soil_moisture_pct: number }>("/sensors", { params: { fieldId: field.id } })
-      .then(({ data }) =>
-        setSensorMoisture((prev) => ({ ...prev, [field.id]: data.soil_moisture_pct }))
-      )
-      .catch(() => {
-        // keep field defaults for custom locations
-      });
-  }, [field?.id]);
+    if (!allFields.length) return;
+
+    allFields.forEach((f) => {
+      api
+        .get<{ soil_moisture_pct: number }>("/sensors", { params: { fieldId: f.id } })
+        .then(({ data }) =>
+          setSensorMoisture((prev) => ({ ...prev, [f.id]: data.soil_moisture_pct }))
+        )
+        .catch(() => {
+          // Keep field defaults when the demo adapter is unavailable.
+        });
+
+      api
+        .get<NdviSignal>("/ndvi", { params: { fieldId: f.id, lat: f.lat, lon: f.lon } })
+        .then(({ data }) => setNdviByField((prev) => ({ ...prev, [f.id]: data })))
+        .catch(() => {
+          // Keep field defaults when the satellite demo adapter is unavailable.
+        });
+    });
+  }, [allFields]);
 
   const weather = field ? weatherByField[field.id] ?? null : null;
 
   const recommendations: Recommendation[] = useMemo(() => {
-    if (!fieldsWithSensor.length) return [];
+    if (!fieldsWithSignals.length) return [];
     return buildFarmRecommendations(
-      fieldsWithSensor,
+      fieldsWithSignals,
       (id) => {
         const wx = weatherByField[id];
         if (!wx) return null;
@@ -145,7 +174,10 @@ export default function FieldPage() {
       },
       3
     );
-  }, [fieldsWithSensor, weatherByField]);
+  }, [fieldsWithSignals, weatherByField]);
+
+  const activeRecommendations = recommendations.filter((r) => !completedIds.includes(r.id));
+  const completedRecommendations = recommendations.filter((r) => completedIds.includes(r.id));
 
   if (farmError) {
     return (
@@ -178,7 +210,7 @@ export default function FieldPage() {
               <div>
                 <p className="kicker">TODAY</p>
                 <h1>
-                  {recommendations.length} thing{recommendations.length === 1 ? "" : "s"} need
+                  {activeRecommendations.length} thing{activeRecommendations.length === 1 ? "" : "s"} need
                   your attention
                 </h1>
                 <p className="subtle">
@@ -202,7 +234,7 @@ export default function FieldPage() {
             )}
 
             <div className="actionList">
-              {recommendations.map((item) => (
+              {activeRecommendations.map((item) => (
                 <article key={item.id} className="actionRow">
                   <div
                     className={`priorityDot ${item.priority}`}
@@ -219,25 +251,56 @@ export default function FieldPage() {
                       <strong>{item.action}</strong>
                     </div>
                   </div>
-                  <button
-                    type="button"
-                    className="reviewButton"
-                    onClick={() => {
-                      setReviewRec(item);
-                      setFieldId(item.fieldId);
-                    }}
-                  >
-                    Review
-                  </button>
+                  <div className="actionButtons">
+                    <button
+                      type="button"
+                      className="reviewButton"
+                      onClick={() => {
+                        setReviewRec(item);
+                        setFieldId(item.fieldId);
+                      }}
+                    >
+                      Review
+                    </button>
+                    <button
+                      type="button"
+                      className="reviewButton"
+                      onClick={() => setCompletedIds((prev) => [...new Set([...prev, item.id])])}
+                    >
+                      Mark done
+                    </button>
+                  </div>
                 </article>
               ))}
             </div>
+
+            {completedRecommendations.length > 0 && (
+              <details className="completedTasks">
+                <summary>View completed ({completedRecommendations.length})</summary>
+                <div className="completedList">
+                  {completedRecommendations.map((item) => (
+                    <div key={item.id} className="completedRow">
+                      <span>{item.title}</span>
+                      <button
+                        type="button"
+                        className="reviewButton"
+                        onClick={() =>
+                          setCompletedIds((prev) => prev.filter((id) => id !== item.id))
+                        }
+                      >
+                        Restore
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            )}
 
             <section className="conditions" aria-label="Current conditions">
               <Condition
                 label="Soil moisture"
                 value={`${field.soilMoisturePct}%`}
-                meta={sensorMoisture[field.id] != null ? "/api/sensors" : "sensor demo"}
+                meta={sensorMoisture[field.id] != null ? "Sensor adapter · demo data" : "Demo fallback"}
               />
               <Condition
                 label="Rain · 24h"
@@ -252,7 +315,11 @@ export default function FieldPage() {
               <Condition
                 label="NDVI change"
                 value={`${field.ndviChangePct}%`}
-                meta="satellite demo"
+                meta={
+                  ndviByField[field.id]?.status === "live"
+                    ? "Copernicus Sentinel-2 · live"
+                    : "Sentinel-2 adapter · demo"
+                }
               />
             </section>
           </section>
@@ -265,7 +332,7 @@ export default function FieldPage() {
               >
                 <div className="photoOverlay">
                   <p>{field.name}</p>
-                  <strong>{farm.crop}</strong>
+                  <strong>{field.detail.split("·")[0].trim()}</strong>
                 </div>
               </div>
 
@@ -279,7 +346,7 @@ export default function FieldPage() {
                 </div>
 
                 <div className="fieldRows">
-                  {allFields.map((f) => {
+                  {fieldsWithSignals.map((f) => {
                     const health = fieldHealth(f);
                     return (
                       <button
@@ -306,12 +373,16 @@ export default function FieldPage() {
                     </strong>
                   </div>
                   <div>
-                    <span>Soil sensor</span>
-                    <strong>Demo feed</strong>
+                    <span>Soil moisture</span>
+                    <strong>Sensor adapter · demo</strong>
                   </div>
                   <div>
-                    <span>Satellite</span>
-                    <strong>Demo NDVI</strong>
+                    <span>Satellite NDVI</span>
+                    <strong>
+                      {ndviByField[field.id]?.status === "live"
+                        ? "Copernicus · live"
+                        : "Sentinel-2 adapter · demo"}
+                    </strong>
                   </div>
                 </div>
               </div>
