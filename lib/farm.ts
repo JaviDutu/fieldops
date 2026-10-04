@@ -1,4 +1,4 @@
-import { LonLat, DataSource, Farm } from "@/types/farm";
+import { LonLat, DataSource, Farm, Field } from "@/types/farm";
 
 // Builds a small square parcel around a point (about 11 ha) so every field has a polygon.
 function parcel(lat: number, lon: number, d = 0.0015): LonLat[] {
@@ -45,4 +45,20 @@ export const demoFarm: Farm = {
 
 export async function getFarm(): Promise<Farm>{
     return demoFarm;
+}
+
+export function makeField(name: string, lat: number, lon: number): Field {
+  const la = Number(lat.toFixed(4));
+  const lo = Number(lon.toFixed(4));
+  return {
+    id: `custom-${Date.now()}`,
+    name,
+    detail: "Added by you",
+    lat: la,
+    lon: lo,
+    polygon: parcel(la, lo),
+    soilMoisturePct: 28,
+    ndviChangePct: 0,
+    dataSources: sources,
+  };
 }

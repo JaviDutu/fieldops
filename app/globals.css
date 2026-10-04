@@ -224,6 +224,15 @@ h1 { margin-bottom: 7px; font-size: clamp(30px, 4vw, 44px); line-height: 1.02; l
 .fieldState.healthy { color: #4c805a; }
 .fieldState.warning { color: var(--amber); }
 .fieldState.danger { color: var(--red); }
+.pickerBackdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: grid; place-items: center; z-index: 50; padding: 16px; }
+.pickerCard { background: #fff; border-radius: 16px; padding: 20px; width: min(480px, 100%); display: grid; gap: 14px; max-height: 90vh; overflow: auto; }
+.pickerSearch { display: flex; gap: 8px; }
+.pickerSearch input { flex: 1; padding: 10px 12px; border: 1px solid #d0d5dd; border-radius: 10px; font: inherit; }
+.pickerResults { display: grid; gap: 6px; }
+.pickerResult { text-align: left; padding: 10px 12px; border: 1px solid #e4e7ec; border-radius: 10px; background: #fff; cursor: pointer; display: grid; }
+.pickerResult:hover { background: #f5f7fa; }
+.fieldRowButton { width: 100%; text-align: left; border: 0; background: transparent; padding: 6px; border-radius: 10px; cursor: pointer; }
+.fieldRowButton.selected { background: #eef6ee; }
 
 .sourceSummary {
   margin-top: 16px;
