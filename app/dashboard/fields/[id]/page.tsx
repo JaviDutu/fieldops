@@ -89,7 +89,7 @@ export default function FieldPage() {
         <Navbar farmName="My Farm" isOnline={false} />
         <main className="pageWrap">
           <div className="errorNotice">{fieldError}</div>
-          <Link href="/" className="backLink">← Back to all fields</Link>
+          <Link href="/dashboard" className="backLink">← Back to all fields</Link>
         </main>
       </div>
     );
@@ -98,7 +98,9 @@ export default function FieldPage() {
   if (!field || !signals) {
     return (
       <div className="appShell">
-        <p className="subtle">Loading field…</p>
+        <main className="pageWrap">
+          <p className="subtle">Loading field…</p>
+        </main>
       </div>
     );
   }
@@ -111,7 +113,7 @@ export default function FieldPage() {
 
       <main className="workspace">
         <section className="mainColumn">
-          <Link href="/" className="backLink">← All fields</Link>
+          <Link href="/dashboard" className="backLink">← All fields</Link>
 
           <div className="pageHeading">
             <div>

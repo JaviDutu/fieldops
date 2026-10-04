@@ -37,7 +37,9 @@ export default function Dashboard() {
   if (error) {
     return (
       <div className="appShell">
-        <div className="errorNotice">{error} Please refresh.</div>
+        <main className="pageWrap">
+          <div className="errorNotice">{error} Please refresh.</div>
+        </main>
       </div>
     );
   }
@@ -45,7 +47,9 @@ export default function Dashboard() {
   if (!data) {
     return (
       <div className="appShell">
-        <p className="subtle">Loading your farm…</p>
+        <main className="pageWrap">
+          <p className="subtle">Loading your farm…</p>
+        </main>
       </div>
     );
   }

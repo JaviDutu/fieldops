@@ -128,6 +128,192 @@
   color: var(--field-ink);
 }
 
+.fieldDashboard .pageWrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 40px 28px 56px;
+}
+
+.fieldDashboard .backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  color: var(--field-muted);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.fieldDashboard .backLink:hover {
+  color: var(--field-ink);
+}
+
+.fieldDashboard .summaryStrip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 22px 0 28px;
+  border: 1px solid var(--field-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.58);
+  overflow: hidden;
+}
+
+.fieldDashboard .summaryStrip > div {
+  padding: 16px 18px;
+  border-right: 1px solid var(--field-line);
+}
+
+.fieldDashboard .summaryStrip > div:last-child {
+  border-right: 0;
+}
+
+.fieldDashboard .summaryStrip span {
+  display: block;
+  color: var(--field-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.fieldDashboard .summaryStrip strong {
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+
+.fieldDashboard .fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.fieldDashboard .fieldCard {
+  display: block;
+  border: 1px solid var(--field-line);
+  background: var(--field-surface);
+  border-radius: 14px;
+  padding: 18px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.fieldDashboard .fieldCard:hover {
+  transform: translateY(-2px);
+  border-color: #c9d6cb;
+  box-shadow: 0 10px 24px -16px rgba(27, 36, 29, 0.35);
+}
+
+.fieldDashboard .fieldCardTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 6px;
+}
+
+.fieldDashboard .fieldCardTop h2 {
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+
+.fieldDashboard .fieldPlace {
+  color: var(--field-muted);
+  font-size: 12px;
+  margin: 4px 0 14px;
+}
+
+.fieldDashboard .fieldCardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--field-line);
+}
+
+.fieldDashboard .fieldCardMeta span {
+  font-size: 11px;
+  color: var(--field-ink);
+  background: var(--field-surface-soft);
+  border-radius: 999px;
+  padding: 4px 9px;
+  text-transform: capitalize;
+}
+
+.fieldDashboard .emptyState {
+  text-align: center;
+  border: 1px dashed var(--field-line);
+  border-radius: 16px;
+  padding: 64px 24px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.fieldDashboard .emptyState h2 {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.fieldDashboard .emptyState .reviewButton {
+  margin-top: 16px;
+}
+
+.fieldDashboard .detailList {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--field-line);
+}
+
+.fieldDashboard .detailList > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 13px;
+}
+
+.fieldDashboard .detailList dt {
+  color: var(--field-muted);
+}
+
+.fieldDashboard .detailList dd {
+  font-weight: 650;
+  text-align: right;
+}
+
+.fieldDashboard .fieldNotes {
+  margin: 4px 0 14px;
+  padding: 11px 13px;
+  background: var(--field-surface-soft);
+  border-radius: 9px;
+  font-size: 13px;
+  color: #4d574f;
+  line-height: 1.5;
+}
+
+.fieldDashboard .dangerButton {
+  margin-top: 16px;
+  width: 100%;
+  border: 1px solid #e6c6bd;
+  background: #fff5f2;
+  color: var(--field-red);
+  border-radius: 9px;
+  padding: 10px 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.fieldDashboard .dangerButton:hover {
+  background: #fdeae4;
+}
+
+.fieldDashboard .dangerButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 .fieldDashboard .workspace {
   max-width: 1240px;
   margin: 0 auto;
@@ -504,6 +690,10 @@
     padding: 28px 16px 44px;
   }
 
+  .fieldDashboard .pageWrap {
+    padding: 28px 16px 44px;
+  }
+
   .fieldDashboard .sideColumn {
     order: -1;
   }
@@ -554,6 +744,19 @@
 
   .fieldDashboard .conditionItem:nth-child(2) {
     border-right: 0;
+  }
+
+  .fieldDashboard .summaryStrip {
+    grid-template-columns: 1fr;
+  }
+
+  .fieldDashboard .summaryStrip > div {
+    border-right: 0;
+    border-bottom: 1px solid var(--field-line);
+  }
+
+  .fieldDashboard .summaryStrip > div:last-child {
+    border-bottom: 0;
   }
 
   .fieldDashboard .conditionItem:nth-child(-n + 2) {
