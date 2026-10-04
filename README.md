@@ -9,7 +9,11 @@ Instead of making farmers inspect separate weather, sensor and satellite dashboa
 npm install
 npm run dev
 ```
-Then open `http://localhost:3000`.
+Then open `http://localhost:3000` for the landing page, or `http://localhost:3000/field` for the dashboard.
+
+## Design & shadcn
+
+See **`docs/STYLE.md`** for brand colors, the split between the shadcn landing UI and the field dashboard CSS, and how to add components.
 
 ## Current MVP
 - real Open-Meteo weather integration

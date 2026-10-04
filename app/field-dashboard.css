@@ -1,0 +1,546 @@
+/* Field dashboard — preserved from pre-shadcn MVP (see docs/STYLE.md) */
+
+:root {
+  --field-bg: #f4f4ef;
+  --field-surface: #ffffff;
+  --field-surface-soft: #f8f8f4;
+  --field-ink: #1b241d;
+  --field-muted: #697169;
+  --field-line: #e2e4de;
+  --field-green: #245b3b;
+  --field-green-soft: #edf4ee;
+  --field-amber: #a86d1f;
+  --field-red: #9d4539;
+}
+
+.fieldDashboard {
+  color-scheme: light;
+  min-height: 100vh;
+  background: var(--field-bg);
+  color: var(--field-ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.fieldDashboard button {
+  font: inherit;
+}
+
+.fieldDashboard .appShell {
+  min-height: 100vh;
+}
+
+.fieldDashboard .topbar {
+  height: 68px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+  padding: 0 32px;
+  border-bottom: 1px solid var(--field-line);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.fieldDashboard .brandRow,
+.fieldDashboard .farmSelector,
+.fieldDashboard .navTabs,
+.fieldDashboard .actionHeading,
+.fieldDashboard .sectionHeading,
+.fieldDashboard .fieldState {
+  display: flex;
+  align-items: center;
+}
+
+.fieldDashboard .brandRow {
+  gap: 10px;
+}
+
+.fieldDashboard .brandMark {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--field-green);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.fieldDashboard .navTabs {
+  gap: 4px;
+}
+
+.fieldDashboard .navTab {
+  border: 0;
+  background: transparent;
+  color: var(--field-muted);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: inherit;
+}
+
+.fieldDashboard .navTab.active {
+  color: var(--field-ink);
+  background: #f0f1ec;
+  font-weight: 700;
+}
+
+.fieldDashboard .farmSelector {
+  justify-self: end;
+  gap: 8px;
+  color: #4d574f;
+  font-size: 13px;
+}
+
+.fieldDashboard .liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #b7bbb5;
+}
+
+.fieldDashboard .liveDot.online {
+  background: #4d8b61;
+  box-shadow: 0 0 0 3px #e8f1ea;
+}
+
+.fieldDashboard .workspace {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 40px 28px 56px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.75fr);
+  gap: 32px;
+}
+
+.fieldDashboard .pageHeading {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: flex-end;
+  margin-bottom: 22px;
+}
+
+.fieldDashboard .kicker {
+  margin: 0 0 7px;
+  color: var(--field-green);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.fieldDashboard h1,
+.fieldDashboard h2,
+.fieldDashboard p {
+  margin-top: 0;
+}
+
+.fieldDashboard h1 {
+  margin-bottom: 7px;
+  font-size: clamp(30px, 4vw, 44px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.fieldDashboard .pageHeading .subtle {
+  margin: 0;
+  color: var(--field-muted);
+}
+
+.fieldDashboard .subtle {
+  color: var(--field-muted);
+}
+
+.fieldDashboard .secondaryButton,
+.fieldDashboard .reviewButton {
+  border: 1px solid var(--field-line);
+  background: var(--field-surface);
+  color: var(--field-ink);
+  border-radius: 9px;
+  padding: 9px 12px;
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.fieldDashboard .secondaryButton:hover,
+.fieldDashboard .reviewButton:hover {
+  background: var(--field-surface-soft);
+}
+
+.fieldDashboard .errorNotice {
+  margin-bottom: 14px;
+  padding: 11px 13px;
+  border: 1px solid #ead4c8;
+  background: #fff8f2;
+  border-radius: 9px;
+  color: #754d38;
+  font-size: 13px;
+}
+
+.fieldDashboard .actionList {
+  border: 1px solid var(--field-line);
+  background: var(--field-surface);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.fieldDashboard .actionRow {
+  display: grid;
+  grid-template-columns: 10px minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 20px;
+  border-bottom: 1px solid var(--field-line);
+}
+
+.fieldDashboard .actionRow:last-child {
+  border-bottom: 0;
+}
+
+.fieldDashboard .priorityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 8px;
+  background: #7b847d;
+}
+
+.fieldDashboard .priorityDot.high {
+  background: var(--field-red);
+}
+
+.fieldDashboard .priorityDot.medium {
+  background: var(--field-amber);
+}
+
+.fieldDashboard .priorityDot.low {
+  background: #4f7f5c;
+}
+
+.fieldDashboard .actionHeading {
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.fieldDashboard .actionHeading h2 {
+  margin-bottom: 7px;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+
+.fieldDashboard .sourceText {
+  color: #879087;
+  font-size: 11px;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.fieldDashboard .actionBody > p {
+  color: #555f57;
+  line-height: 1.52;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.fieldDashboard .recommendedNext {
+  display: grid;
+  gap: 3px;
+}
+
+.fieldDashboard .recommendedNext span {
+  color: #8a918b;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+.fieldDashboard .recommendedNext strong {
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 650;
+}
+
+.fieldDashboard .reviewButton {
+  align-self: start;
+  font-size: 12px;
+}
+
+.fieldDashboard .conditions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 16px;
+  border: 1px solid var(--field-line);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.58);
+  overflow: hidden;
+}
+
+.fieldDashboard .conditionItem {
+  padding: 14px 16px;
+  border-right: 1px solid var(--field-line);
+}
+
+.fieldDashboard .conditionItem:last-child {
+  border-right: 0;
+}
+
+.fieldDashboard .conditionItem span,
+.fieldDashboard .conditionItem small {
+  display: block;
+}
+
+.fieldDashboard .conditionItem span {
+  color: var(--field-muted);
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.fieldDashboard .conditionItem strong {
+  display: block;
+  font-size: 19px;
+  margin-bottom: 3px;
+}
+
+.fieldDashboard .conditionItem small {
+  color: #929991;
+  font-size: 10px;
+}
+
+.fieldDashboard .sideColumn {
+  min-width: 0;
+}
+
+.fieldDashboard .farmCard {
+  border: 1px solid var(--field-line);
+  background: var(--field-surface);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.fieldDashboard .farmPhoto {
+  height: 265px;
+  background-size: cover;
+  background-position: center 58%;
+  position: relative;
+}
+
+.fieldDashboard .farmPhoto::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(13, 28, 18, 0.58), rgba(13, 28, 18, 0) 52%);
+}
+
+.fieldDashboard .photoOverlay {
+  position: absolute;
+  z-index: 1;
+  left: 18px;
+  bottom: 16px;
+  color: #fff;
+}
+
+.fieldDashboard .photoOverlay p {
+  margin-bottom: 3px;
+  font-size: 12px;
+  opacity: 0.82;
+}
+
+.fieldDashboard .photoOverlay strong {
+  font-size: 18px;
+}
+
+.fieldDashboard .farmCardBody {
+  padding: 18px;
+}
+
+.fieldDashboard .sectionHeading {
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.fieldDashboard .sectionHeading h2 {
+  margin-bottom: 0;
+  font-size: 19px;
+}
+
+.fieldDashboard .smallStatus {
+  color: var(--field-muted);
+  font-size: 11px;
+}
+
+.fieldDashboard .fieldRows {
+  border-top: 1px solid var(--field-line);
+}
+
+.fieldDashboard .fieldRow {
+  min-height: 58px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--field-line);
+}
+
+.fieldDashboard .fieldRow > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.fieldDashboard .fieldRow strong {
+  font-size: 13px;
+}
+
+.fieldDashboard .fieldRow > div:first-child span {
+  color: var(--field-muted);
+  font-size: 11px;
+}
+
+.fieldDashboard .fieldState {
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.fieldDashboard .fieldState span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.fieldDashboard .fieldState.healthy {
+  color: #4c805a;
+}
+
+.fieldDashboard .fieldState.warning {
+  color: var(--field-amber);
+}
+
+.fieldDashboard .fieldState.danger {
+  color: var(--field-red);
+}
+
+.fieldDashboard .fieldRowButton {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  padding: 6px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.fieldDashboard .fieldRowButton.selected {
+  background: #eef6ee;
+}
+
+.fieldDashboard .sourceSummary {
+  margin-top: 16px;
+  padding: 12px 13px;
+  background: var(--field-surface-soft);
+  border-radius: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.fieldDashboard .sourceSummary div {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  font-size: 11px;
+}
+
+.fieldDashboard .sourceSummary span {
+  color: var(--field-muted);
+}
+
+.fieldDashboard .sourceSummary strong {
+  font-weight: 700;
+}
+
+.fieldDashboard .photoCredit {
+  margin: 8px 2px 0;
+  color: #999f99;
+  font-size: 9px;
+}
+
+@media (max-width: 900px) {
+  .fieldDashboard .topbar {
+    grid-template-columns: 1fr auto;
+    padding: 0 18px;
+  }
+
+  .fieldDashboard .navTabs {
+    display: none;
+  }
+
+  .fieldDashboard .workspace {
+    grid-template-columns: 1fr;
+    padding: 28px 16px 44px;
+  }
+
+  .fieldDashboard .sideColumn {
+    order: -1;
+  }
+
+  .fieldDashboard .farmPhoto {
+    height: 210px;
+  }
+}
+
+@media (max-width: 640px) {
+  .fieldDashboard .topbar {
+    height: 60px;
+  }
+
+  .fieldDashboard .farmSelector span:last-child {
+    display: none;
+  }
+
+  .fieldDashboard .pageHeading {
+    align-items: flex-start;
+  }
+
+  .fieldDashboard .pageHeading .secondaryButton {
+    display: none;
+  }
+
+  .fieldDashboard .actionRow {
+    grid-template-columns: 10px 1fr;
+  }
+
+  .fieldDashboard .reviewButton {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .fieldDashboard .actionHeading {
+    display: block;
+  }
+
+  .fieldDashboard .sourceText {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .fieldDashboard .conditions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .fieldDashboard .conditionItem:nth-child(2) {
+    border-right: 0;
+  }
+
+  .fieldDashboard .conditionItem:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--field-line);
+  }
+}

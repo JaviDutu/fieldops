@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const lat = Number(request.nextUrl.searchParams.get("lat") ?? "-17.7333");
-  const lon = Number(request.nextUrl.searchParams.get("lon") ?? "168.3273");
+  const lat = Number(request.nextUrl.searchParams.get("lat") ?? "-36.131");
+  const lon = Number(request.nextUrl.searchParams.get("lon") ?? "146.35");
 
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
     return NextResponse.json({ error: "Invalid coordinates" }, { status: 400 });
