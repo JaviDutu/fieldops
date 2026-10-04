@@ -1,4 +1,14 @@
 import { LonLat, DataSource, Farm, Field } from "@/types/farm";
+import { prisma } from "@/lib/prisma";
+
+// There are no user accounts yet, so every field belongs to one default farm.
+export async function getDefaultFarm() {
+  return prisma.farm.upsert({
+    where: { id: "default-farm" },
+    update: {},
+    create: { id: "default-farm", name: "My Farm" },
+  });
+}
 
 // Builds a small square parcel around a point (about 11 ha) so every field has a polygon.
 function parcel(lat: number, lon: number, d = 0.0015): LonLat[] {

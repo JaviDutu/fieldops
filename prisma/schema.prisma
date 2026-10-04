@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Farm {
+  id        String   @id @default(cuid())
+  name      String
+  region    String?
+  createdAt DateTime @default(now())
+  fields    Field[]
+}
+
+model Field {
+  id           String    @id @default(cuid())
+  farmId       String
+  farm         Farm      @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  name         String
+  crop         String
+  areaHa       Float
+  latitude     Float
+  longitude    Float
+  placeLabel   String?
+  polygon      String    // GeoJSON style ring stored as JSON text: [[lon, lat], ...]
+  irrigation   String    @default("rainfed")
+  soilType     String?
+  plantingDate DateTime?
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([farmId])
+}

@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "DEMETER — Climate-smart farming decisions",
+  title: "GAIA — Climate-smart farming decisions",
   description:
     "Combine weather, soil and satellite signals into prioritised actions for small farmers",
 };

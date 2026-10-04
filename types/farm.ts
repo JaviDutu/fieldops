@@ -26,3 +26,32 @@ export type Farm = {
   crop: string;
   fields: Field[];
 };
+
+export type FieldDTO = {
+  id: string;
+  name: string;
+  crop: string;
+  areaHa: number;
+  latitude: number;
+  longitude: number;
+  placeLabel: string | null;
+  polygon: [number, number][];
+  irrigation: string;
+  soilType: string | null;
+  plantingDate: string | null;
+  notes: string | null;
+  createdAt: string;
+};
+
+export type NewFieldInput = {
+  name: string;
+  crop: string;
+  areaHa: number;
+  latitude: number;
+  longitude: number;
+  placeLabel?: string | null;
+  irrigation: string;
+  soilType?: string | null;
+  plantingDate?: string | null;
+  notes?: string | null;
+};
