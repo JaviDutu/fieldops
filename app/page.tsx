@@ -1,7 +1,10 @@
 "use client";
 
+import axios from "axios";
 import { useEffect, useMemo, useState } from "react";
 import { buildRecommendations, Recommendation } from "@/lib/recommendations";
+import { demoFarm } from "@/lib/farm";
+import Navbar from "@/component/navbar";
 
 type Weather = {
   next24h: { rainMm: number; et0Mm: number; vpdPeakKpa: number; tempPeakC: number };
@@ -23,13 +26,19 @@ const FARM_IMAGE =
 export default function Home() {
   const [weather, setWeather] = useState<Weather | null>(null);
   const [error, setError] = useState<string | null>(null);
-
+  const [fieldId, setFieldId] = useState(demoFarm.fields[0].id);
+  const field = demoFarm.fields.find((f) => f.id === fieldId) ?? demoFarm.fields[0];
   useEffect(() => {
-    fetch(`/api/weather?lat=${mockFarm.lat}&lon=${mockFarm.lon}`)
-      .then((r) => (r.ok ? r.json() : Promise.reject(new Error("Weather API failed"))))
-      .then(setWeather)
-      .catch((e) => setError(e.message));
-  }, []);
+    axios
+      .get<Weather>("/api/weather", {
+        params: {
+          lat: mockFarm.lat,
+          lon: mockFarm.lon,
+        },
+      })
+      .then((response) => setWeather(response.data))
+      .catch((error) => setError(error?.response?.data?.message ?? error.message ?? "Weather API failed"));
+  }, [field.lat, field.lon]);
 
   const recommendations: Recommendation[] = useMemo(() => {
     return buildRecommendations({
@@ -43,23 +52,7 @@ export default function Home() {
 
   return (
     <div className="appShell">
-      <header className="topbar">
-        <div className="brandRow">
-          <div className="brandMark">F</div>
-          <strong>FieldOps</strong>
-        </div>
-
-        <nav className="navTabs" aria-label="Main navigation">
-          <button className="navTab active">Today</button>
-          <button className="navTab">Fields</button>
-          <button className="navTab">Sources</button>
-        </nav>
-
-        <div className="farmSelector">
-          <span className={`liveDot ${weather ? "online" : ""}`} />
-          <span>{mockFarm.name}</span>
-        </div>
-      </header>
+      <Navbar farmName={mockFarm.name} isOnline={!!weather} />
 
       <main className="workspace">
         <section className="mainColumn">
