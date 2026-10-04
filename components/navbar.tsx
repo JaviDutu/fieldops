@@ -5,7 +5,7 @@ import Link from "next/link";
 type NavbarProps = {
   farmName: string;
   isOnline: boolean;
-  activeTab?: "today" | "fields" | "sources";
+  activeTab?: "today" | "fields";
 };
 
 export default function Navbar({ farmName, isOnline, activeTab = "today" }: NavbarProps) {
@@ -25,9 +25,6 @@ export default function Navbar({ farmName, isOnline, activeTab = "today" }: Navb
         </Link>
         <span className={`navTab ${activeTab === "fields" ? "active" : ""}`} aria-disabled>
           Fields
-        </span>
-        <span className={`navTab ${activeTab === "sources" ? "active" : ""}`} aria-disabled>
-          Sources
         </span>
       </nav>
 
