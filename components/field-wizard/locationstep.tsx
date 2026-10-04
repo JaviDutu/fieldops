@@ -271,7 +271,7 @@ export default function LocationStep({ value, onChange, error }: Props) {
                 {results.length} found
               </Badge>
             </div>
-            <div className="max-h-[240px] space-y-1.5 overflow-y-auto pr-1">
+            <div className="max-h-[240px] space-y-1.5 overflow-y-auto pr-1 sm:max-h-[320px]">
               {results.map((result) => {
                 const label = [result.name, result.admin].filter(Boolean).join(", ");
                 return (

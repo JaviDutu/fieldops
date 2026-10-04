@@ -154,8 +154,8 @@ export default function NewFieldWizard({ onCreated, onClose }: Props) {
 
   return (
     <Dialog open onOpenChange={(open) => !open && !saving && onClose()}>
-      <DialogContent className="w-[calc(100%-2rem)] max-w-2xl gap-0 overflow-hidden rounded-2xl border p-0 shadow-2xl sm:w-full">
-        <DialogHeader className="space-y-5 border-b px-6 py-5">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-2xl gap-0 overflow-hidden rounded-2xl border p-0 shadow-2xl sm:w-full sm:max-w-2xl lg:max-w-3xl">
+        <DialogHeader className="space-y-5 border-b px-6 py-5 sm:px-8">
           {/* Progress */}
           <ol className="flex items-center" aria-label="Progress">
             {STEPS.map((s, i) => {
@@ -210,7 +210,7 @@ export default function NewFieldWizard({ onCreated, onClose }: Props) {
         </DialogHeader>
 
         <form onSubmit={handleSubmit} noValidate>
-          <div className="max-h-[55vh] min-h-[280px] overflow-y-auto px-6 py-5">
+          <div className="max-h-[70vh] min-h-[320px] overflow-y-auto px-6 py-5 sm:px-8 sm:py-6">
             {/* Step 1: Location */}
             {step === 0 && (
               <LocationStep
@@ -398,7 +398,7 @@ export default function NewFieldWizard({ onCreated, onClose }: Props) {
           </div>
 
           {/* Footer */}
-          <div className="flex items-center justify-between border-t bg-muted/20 px-6 py-3">
+          <div className="flex items-center justify-between border-t bg-muted/20 px-6 py-3 sm:px-8 sm:py-4">
             {step === 0 ? (
               <Button type="button" variant="ghost" onClick={onClose}>
                 Cancel
