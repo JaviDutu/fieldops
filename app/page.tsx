@@ -36,14 +36,7 @@ export default function Home() {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,oklch(0.72_0.12_145/0.35),transparent)]"
         aria-hidden
       />
-      <div
-        className="pointer-events-none absolute -right-32 top-40 size-[420px] rounded-full bg-emerald-100/40 blur-3xl animate-pulse"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -left-24 bottom-20 size-[360px] rounded-full bg-amber-100/30 blur-3xl animate-pulse [animation-delay:1.2s]"
-        aria-hidden
-      />
+
 
       <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-6 py-6 sm:px-8">
         <Link href="/" className="flex items-center gap-2.5 no-underline">
@@ -128,6 +121,27 @@ export default function Home() {
               <dd className="mt-1 text-2xl font-semibold text-foreground">&lt; 2 min</dd>
             </div>
           </dl>
+        </section>
+
+        <section className="mt-14 overflow-hidden rounded-2xl border bg-card shadow-sm">
+          <div
+            className="h-[260px] bg-cover bg-center sm:h-[360px]"
+            style={{
+              backgroundImage:
+                "url(https://images.unsplash.com/photo-1777063012816-35f5bcbe4e09?auto=format&fit=crop&fm=jpg&q=80&w=1800)",
+            }}
+            role="img"
+            aria-label="Aerial view of working farmland"
+          />
+          <div className="flex flex-col gap-1 border-t px-5 py-4 text-left sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-sm font-medium text-foreground">Built around the farm, not another analytics dashboard.</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Weather, soil and satellite signals are translated into field-level actions.
+              </p>
+            </div>
+            <span className="mt-2 text-[10px] text-muted-foreground sm:mt-0">Real farm photo · Unsplash</span>
+          </div>
         </section>
 
         <section
