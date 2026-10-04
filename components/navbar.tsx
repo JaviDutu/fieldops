@@ -13,7 +13,7 @@ export default function Navbar({ farmName, isOnline, activeTab = "today" }: Navb
     <header className="topbar">
       <Link href="/" className="brandRow" style={{ textDecoration: "none", color: "inherit" }}>
         <div className="brandMark">D</div>
-        <strong>DEMETER</strong>
+        <strong>GAIA</strong>
       </Link>
 
       <nav className="navTabs" aria-label="Main navigation">

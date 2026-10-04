@@ -48,19 +48,19 @@ export default function Home() {
       <header className="relative z-10 mx-auto flex max-w-6xl items-center justify-between px-6 py-6 sm:px-8">
         <Link href="/" className="flex items-center gap-2.5 no-underline">
           <div className="flex size-9 items-center justify-center rounded-lg bg-[#245b3b] text-sm font-extrabold text-white shadow-sm">
-            F
+            GAIA
           </div>
-          <span className="text-lg font-semibold tracking-tight text-foreground">DEMETER</span>
+          <span className="text-lg font-semibold tracking-tight text-foreground">GAIA</span>
         </Link>
         <nav className="flex items-center gap-2 sm:gap-3">
           <Link
-            href="/field"
+            href="/dashboard"
             className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "hidden sm:inline-flex")}
           >
             Dashboard
           </Link>
           <Link
-            href="/field"
+            href="/dashboard"
             className={cn(buttonVariants({ size: "sm" }), "bg-[#245b3b] hover:bg-[#1e4d32]")}
           >
             Open today&apos;s feed
@@ -91,7 +91,7 @@ export default function Home() {
 
           <div className="mt-10 flex animate-in fade-in slide-in-from-bottom-4 fill-mode-both flex-col items-center justify-center gap-3 duration-700 [animation-delay:240ms] sm:flex-row">
             <Link
-              href="/field"
+              href="/dashboard"
               className={cn(
                 buttonVariants({ size: "lg" }),
                 "h-11 rounded-xl bg-[#245b3b] px-6 hover:bg-[#1e4d32]"
@@ -170,7 +170,7 @@ export default function Home() {
                 Ready when you are
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
-                Your demo farm is waiting on the field dashboard.
+                Your demo farm is waiting on the GAIA dashboard.
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-emerald-50/85">
                 Pick a field, review today&apos;s recommendations, and add your own location with
@@ -178,7 +178,7 @@ export default function Home() {
               </p>
             </div>
             <Link
-              href="/field"
+              href="/dashboard"
               className={cn(
                 buttonVariants({ size: "lg" }),
                 "h-11 shrink-0 rounded-xl bg-white text-[#245b3b] hover:bg-emerald-50"
@@ -192,7 +192,7 @@ export default function Home() {
       </main>
 
       <footer className="relative z-10 border-t py-8 text-center text-xs text-muted-foreground">
-        DEMETER · Climate Hack-tion · MVP demo
+        GAIA · Climate Hack-tion · MVP demo
       </footer>
     </div>
   );
