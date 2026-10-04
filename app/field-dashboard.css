@@ -112,6 +112,22 @@
   box-shadow: 0 0 0 3px #e8f1ea;
 }
 
+.fieldDashboard .logoutButton {
+  border: 1px solid var(--field-line);
+  background: var(--field-surface);
+  color: var(--field-muted);
+  border-radius: 7px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.fieldDashboard .logoutButton:hover {
+  background: var(--field-surface-soft);
+  color: var(--field-ink);
+}
+
 .fieldDashboard .workspace {
   max-width: 1240px;
   margin: 0 auto;

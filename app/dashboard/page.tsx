@@ -82,7 +82,7 @@ export default function Dashboard() {
               const s = mockSignals(f.id);
               const health = fieldHealth(s.soilMoisturePct, s.ndviChangePct);
               return (
-                <Link key={f.id} href={`/fields/${f.id}`} className="fieldCard">
+                <Link key={f.id} href={`/dashboard/fields/${f.id}`} className="fieldCard">
                   <div className="fieldCardTop">
                     <h2>{f.name}</h2>
                     <div className={`fieldState ${health.tone}`}>
@@ -107,7 +107,7 @@ export default function Dashboard() {
       {modalOpen && (
         <NewFieldModal
           onClose={() => setModalOpen(false)}
-          onCreated={(field) => router.push(`/fields/${field.id}`)}
+          onCreated={(field) => router.push(`/dashboard/fields/${field.id}`)}
         />
       )}
     </div>

@@ -1,36 +1,56 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { api } from "@/lib/api";
 
 type NavbarProps = {
   farmName: string;
   isOnline: boolean;
-  activeTab?: "today" | "fields";
 };
 
-export default function Navbar({ farmName, isOnline, activeTab = "today" }: NavbarProps) {
+export default function Navbar({ farmName, isOnline }: NavbarProps) {
+  const router = useRouter();
+  const [userName, setUserName] = useState<string | null>(null);
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  useEffect(() => {
+    api
+      .get<{ name: string }>("/auth/me")
+      .then(({ data }) => setUserName(data.name))
+      .catch(() => setUserName(null));
+  }, []);
+
+  async function handleLogout() {
+    setLoggingOut(true);
+    try {
+      await api.post("/auth/logout");
+    } finally {
+      router.push("/login");
+      router.refresh();
+    }
+  }
+
   return (
     <header className="topbar">
-      <Link href="/" className="brandRow" style={{ textDecoration: "none", color: "inherit" }}>
-        <div className="brandMark">D</div>
+      <Link href="/dashboard" className="brandRow" style={{ textDecoration: "none", color: "inherit" }}>
+        <div className="brandMark">G</div>
         <strong>GAIA</strong>
       </Link>
 
       <nav className="navTabs" aria-label="Main navigation">
-        <Link
-          href="/field"
-          className={`navTab ${activeTab === "today" ? "active" : ""}`}
-        >
-          Today
+        <Link href="/dashboard" className="navTab active">
+          Your fields
         </Link>
-        <span className={`navTab ${activeTab === "fields" ? "active" : ""}`} aria-disabled>
-          Fields
-        </span>
       </nav>
 
       <div className="farmSelector">
         <span className={`liveDot ${isOnline ? "online" : ""}`} />
-        <span>{farmName}</span>
+        <span>{userName ? `${userName} · ${farmName}` : farmName}</span>
+        <button type="button" className="logoutButton" onClick={handleLogout} disabled={loggingOut}>
+          {loggingOut ? "Logging out…" : "Log out"}
+        </button>
       </div>
     </header>
   );

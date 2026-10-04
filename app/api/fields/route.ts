@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getDefaultFarm } from "@/lib/farm";
+import { getCurrentUser } from "@/lib/auth";
+import { getOrCreateFarmForUser } from "@/lib/farm";
 import { toDTO } from "@/lib/serialize";
 import { parseNewField } from "@/lib/validate";
 import { squareParcel } from "@/lib/geo";
 
 export async function GET() {
-  const farm = await getDefaultFarm();
+  const user = await getCurrentUser();
+  if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+
+  const farm = await getOrCreateFarmForUser(user.id);
   const fields = await prisma.field.findMany({
     where: { farmId: farm.id },
     orderBy: { createdAt: "desc" },
@@ -15,6 +19,9 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const user = await getCurrentUser();
+  if (!user) return NextResponse.json({ error: "Not signed in." }, { status: 401 });
+
   let body: unknown;
   try {
     body = await request.json();
@@ -26,7 +33,7 @@ export async function POST(request: NextRequest) {
   if (!parsed.ok) return NextResponse.json({ error: parsed.error }, { status: 400 });
 
   const d = parsed.data;
-  const farm = await getDefaultFarm();
+  const farm = await getOrCreateFarmForUser(user.id);
 
   const created = await prisma.field.create({
     data: {

@@ -10,6 +10,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getCurrentUser } from "@/lib/auth";
 
 const features = [
   {
@@ -29,7 +30,9 @@ const features = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const user = await getCurrentUser();
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-background">
       <div
@@ -46,19 +49,31 @@ export default function Home() {
           <span className="text-lg font-semibold tracking-tight text-foreground">GAIA</span>
         </Link>
         <nav className="flex items-center gap-2 sm:gap-3">
-          <Link
-            href="/dashboard"
-            className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "hidden sm:inline-flex")}
-          >
-            Dashboard
-          </Link>
-          <Link
-            href="/dashboard"
-            className={cn(buttonVariants({ size: "sm" }), "bg-[#245b3b] hover:bg-[#1e4d32]")}
-          >
-            Open today&apos;s feed
-            <ArrowRight className="size-4" />
-          </Link>
+          {user ? (
+            <Link
+              href="/dashboard"
+              className={cn(buttonVariants({ size: "sm" }), "bg-[#245b3b] hover:bg-[#1e4d32]")}
+            >
+              Go to dashboard
+              <ArrowRight className="size-4" />
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "hidden sm:inline-flex")}
+              >
+                Log in
+              </Link>
+              <Link
+                href="/signup"
+                className={cn(buttonVariants({ size: "sm" }), "bg-[#245b3b] hover:bg-[#1e4d32]")}
+              >
+                Sign up
+                <ArrowRight className="size-4" />
+              </Link>
+            </>
+          )}
         </nav>
       </header>
 
@@ -84,13 +99,13 @@ export default function Home() {
 
           <div className="mt-10 flex animate-in fade-in slide-in-from-bottom-4 fill-mode-both flex-col items-center justify-center gap-3 duration-700 [animation-delay:240ms] sm:flex-row">
             <Link
-              href="/dashboard"
+              href={user ? "/dashboard" : "/signup"}
               className={cn(
                 buttonVariants({ size: "lg" }),
                 "h-11 rounded-xl bg-[#245b3b] px-6 hover:bg-[#1e4d32]"
               )}
             >
-              Go to field dashboard
+              {user ? "Go to field dashboard" : "Get started free"}
               <ArrowRight className="size-4" />
             </Link>
             <a
@@ -192,13 +207,13 @@ export default function Home() {
               </p>
             </div>
             <Link
-              href="/dashboard"
+              href={user ? "/dashboard" : "/signup"}
               className={cn(
                 buttonVariants({ size: "lg" }),
                 "h-11 shrink-0 rounded-xl bg-white text-[#245b3b] hover:bg-emerald-50"
               )}
             >
-              Launch dashboard
+              {user ? "Launch dashboard" : "Create your account"}
               <ArrowRight className="size-4" />
             </Link>
           </div>
